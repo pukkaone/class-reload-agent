@@ -65,6 +65,9 @@
         <attribute
             name="Implementation-Version"
             value="${CRA_VERSION}.${BUILD_NUMBER}"/>
+        <attribute name="Agent-Class" value="it.fridrik.agent.Smith"/>
+        <attribute name="Premain-Class" value="it.fridrik.agent.Smith"/>
+        <attribute name="Can-Redefine-Classes" value="true"/>
       </manifest>
     </jar>
   </target>
