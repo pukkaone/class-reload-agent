@@ -30,140 +30,140 @@ import java.util.logging.Level;
  */
 public class SmithArgs {
 
-	private static final String KEY_CLASSES = "classes";
-	private static final String KEY_JARS = "jars";
-	private static final String KEY_PERIOD = "period";
-	private static final String KEY_LOG_LEVEL = "loglevel";
-	
-	private List<String> classFolders;
-	private String jarFolder;
-	private int period;
-	private Level logLevel;
+    private static final String KEY_CLASSES = "classes";
+    private static final String KEY_JARS = "jars";
+    private static final String KEY_PERIOD = "period";
+    private static final String KEY_LOG_LEVEL = "loglevel";
+    
+    private List<String> classFolders;
+    private String jarFolder;
+    private int period;
+    private Level logLevel;
 
-	private SmithArgs() {
-		this.classFolders = new ArrayList<String>();
-		this.jarFolder = null;
-		this.period = -1;
-		this.logLevel = Level.WARNING;
-	}
-
-	public SmithArgs(String agentArgs) {
-		this();
-
-		if (agentArgs == null || agentArgs.length() == 0) {
-		  return;
-		}
-		
-    String[] args = agentArgs.split(",");
-    for (String arg : args) {
-      String[] parts = arg.split("=");
-      String name = parts[0].trim();
-      String value = parts[1];
-
-      if (name.equals(KEY_CLASSES)) {
-        setClassFolders(value);
-      }
-  
-      if (name.equals(KEY_JARS)) {
-        setJarFolder(value);
-      }
-  
-      if (name.equals(KEY_PERIOD)) {
-        setPeriod(value);
-      }
-  
-      if (name.equals(KEY_LOG_LEVEL)) {
-        setLogLevel(value);
-      }		
+    private SmithArgs() {
+        this.classFolders = new ArrayList<String>();
+        this.jarFolder = null;
+        this.period = -1;
+        this.logLevel = Level.WARNING;
     }
-	}
 
-	public SmithArgs(
-	    String classFolder, String jarFolder, int period,	String logLevel)
-	{
-		this();
+    public SmithArgs(String agentArgs) {
+        this();
 
-		addClassFolder(classFolder);
-		setJarFolder(jarFolder);
-		setLogLevel(logLevel);
-		this.period = period;
-	}
+        if (agentArgs == null || agentArgs.length() == 0) {
+            return;
+        }
+        
+        String[] args = agentArgs.split(",");
+        for (String arg : args) {
+            String[] parts = arg.split("=");
+            String name = parts[0].trim();
+            String value = parts[1];
 
-	public List<String> getClassFolders() {
-		return classFolders;
-	}
-
-	public String getJarFolder() {
-		return jarFolder;
-	}
-
-	public Level getLogLevel() {
-		return logLevel;
-	}
-
-	public int getPeriod() {
-		return period;
-	}
-
-	public boolean isValid() {
-		return !classFolders.isEmpty();
-	}
-
-  private void setClassFolders(String paths) {
-    String[] folders = paths.split(File.pathSeparator);
-    for (String folder : folders) {
-      addClassFolder(folder);
+            if (name.equals(KEY_CLASSES)) {
+                setClassFolders(value);
+            }
+        
+            if (name.equals(KEY_JARS)) {
+                setJarFolder(value);
+            }
+        
+            if (name.equals(KEY_PERIOD)) {
+                setPeriod(value);
+            }
+        
+            if (name.equals(KEY_LOG_LEVEL)) {
+                setLogLevel(value);
+            }
+        }
     }
-  }
 
-	private void addClassFolder(String classFolder) {
-		this.classFolders.add(parseFolderPath(classFolder));
-	}
+    public SmithArgs(
+        String classFolder, String jarFolder, int period,   String logLevel)
+    {
+        this();
 
-	private void setJarFolder(String jarFolder) {
-		this.jarFolder = parseFolderPath(jarFolder);
-	}
+        addClassFolder(classFolder);
+        setJarFolder(jarFolder);
+        setLogLevel(logLevel);
+        this.period = period;
+    }
 
-	private void setLogLevel(String logLevel) {
-		try {
-			this.logLevel = Level.parse(logLevel.trim());
-		} catch (Exception e) {
-			this.logLevel = Level.WARNING;
-		}
-	}
+    public List<String> getClassFolders() {
+        return classFolders;
+    }
 
-	private void setPeriod(String period) {
-		try {
-			this.period = Integer.parseInt(period.trim());
-		} catch (NumberFormatException e) {
-			this.period = -1;
-		}
-	}
+    public String getJarFolder() {
+        return jarFolder;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
+    public Level getLogLevel() {
+        return logLevel;
+    }
 
-		sb.append(KEY_CLASSES).append("=").append(classFolders);
+    public int getPeriod() {
+        return period;
+    }
 
-		if (jarFolder != null) {
-			sb.append(",").append(KEY_JARS).append("=").append(jarFolder);
-		}
+    public boolean isValid() {
+        return !classFolders.isEmpty();
+    }
 
-		sb.append(",").append(KEY_PERIOD).append("=").append(period);
-		sb.append(",").append(KEY_LOG_LEVEL).append("=")
-				.append(logLevel.toString());
+    private void setClassFolders(String paths) {
+        String[] folders = paths.split(File.pathSeparator);
+        for (String folder : folders) {
+            addClassFolder(folder);
+        }
+    }
 
-		return sb.toString();
-	}
+    private void addClassFolder(String classFolder) {
+        this.classFolders.add(parseFolderPath(classFolder));
+    }
 
-	private static String parseFolderPath(String folder) {
-		if (folder != null) {
-			String trimmed = folder.trim();
-			return trimmed.endsWith(File.separator)
-			    ? trimmed.substring(0, trimmed.length() - 1)
-			    : trimmed;
-		}
-		return null;
-	}
+    private void setJarFolder(String jarFolder) {
+        this.jarFolder = parseFolderPath(jarFolder);
+    }
+
+    private void setLogLevel(String logLevel) {
+        try {
+            this.logLevel = Level.parse(logLevel.trim());
+        } catch (Exception e) {
+            this.logLevel = Level.WARNING;
+        }
+    }
+
+    private void setPeriod(String period) {
+        try {
+            this.period = Integer.parseInt(period.trim());
+        } catch (NumberFormatException e) {
+            this.period = -1;
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(KEY_CLASSES).append("=").append(classFolders);
+
+        if (jarFolder != null) {
+            sb.append(",").append(KEY_JARS).append("=").append(jarFolder);
+        }
+
+        sb.append(",").append(KEY_PERIOD).append("=").append(period);
+        sb.append(",").append(KEY_LOG_LEVEL).append("=")
+                .append(logLevel.toString());
+
+        return sb.toString();
+    }
+
+    private static String parseFolderPath(String folder) {
+        if (folder != null) {
+            String trimmed = folder.trim();
+            return trimmed.endsWith(File.separator)
+                ? trimmed.substring(0, trimmed.length() - 1)
+                : trimmed;
+        }
+        return null;
+    }
 }

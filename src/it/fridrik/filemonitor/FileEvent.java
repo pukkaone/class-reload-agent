@@ -26,32 +26,32 @@ import java.util.EventObject;
  * @since 1.0
  */
 public class FileEvent extends EventObject {
-	private static final long serialVersionUID = 4696923746078504205L;
+    private static final long serialVersionUID = 4696923746078504205L;
 
-	private final File baseFolder;
-	
-	/**
-	 * Creates a new FileEvent.
-	 * 
-   * @param baseFolder
-   *          the base folder where the changed file was found
-	 * @param fullPath
-	 *          the absolute path of the changed file
-	 */
-	public FileEvent(File baseFolder, File fullPath) {
-		super(fullPath);
-		this.baseFolder = baseFolder;
-	}
+    private final File baseFolder;
+    
+    /**
+     * Creates a new FileEvent.
+     * 
+     * @param baseFolder
+     *          the base folder where the changed file was found
+     * @param fullPath
+     *          the absolute path of the changed file
+     */
+    public FileEvent(File baseFolder, File fullPath) {
+        super(fullPath);
+        this.baseFolder = baseFolder;
+    }
 
-  /**
-   * Gets the changed file.
-   */
-  @Override
-  public File getSource() {
-    return (File) super.getSource();
-  }
-	
-	public File getBaseFolder() {
-	  return baseFolder;
-	}
+    /**
+     * Gets the changed file.
+     */
+    @Override
+    public File getSource() {
+      return (File) super.getSource();
+    }
+    
+    public File getBaseFolder() {
+      return baseFolder;
+    }
 }

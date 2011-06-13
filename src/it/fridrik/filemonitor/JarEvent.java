@@ -27,32 +27,32 @@ import java.util.jar.JarFile;
  */
 public class JarEvent extends EventObject {
 
-	private static final long serialVersionUID = -7809367345460212417L;
+    private static final long serialVersionUID = -7809367345460212417L;
 
-	private final String entryName;
+    private final String entryName;
 
-	public JarEvent(JarFile file, String entryName) {
-		super(file);
-		this.entryName = entryName;
-	}
+    public JarEvent(JarFile file, String entryName) {
+        super(file);
+        this.entryName = entryName;
+    }
 
-	/**
-	 * The changed jar file
-	 * 
-	 * @return a JarFile
-	 */
-	@Override
-	public JarFile getSource() {
-		return (JarFile) super.getSource();
-	}
+    /**
+     * The changed jar file
+     * 
+     * @return a JarFile
+     */
+    @Override
+    public JarFile getSource() {
+        return (JarFile) super.getSource();
+    }
 
-	/**
-	 * The changed class file
-	 * 
-	 * @return the changed class file
-	 */
-	public String getEntryName() {
-		return entryName;
-	}
+    /**
+     * The changed class file
+     * 
+     * @return the changed class file
+     */
+    public String getEntryName() {
+        return entryName;
+    }
 
 }

@@ -37,92 +37,92 @@ import java.util.logging.Logger;
  * @since 1.0
  */
 public class JarMonitor implements FileModifiedListener, FileAddedListener,
-		FileDeletedListener, Runnable {
+        FileDeletedListener, Runnable {
 
-	private final static Logger log = Logger.getLogger(JarMonitor.class.getName());
+    private final static Logger log = Logger.getLogger(JarMonitor.class.getName());
 
-	private final FileMonitor fileMonitor;
-	private final String absoluteFolderPath;
-	private final Map<String, Map<String, Long>> jarsMap;
-	private final List<JarModifiedListener> jarModifiedListeners;
+    private final FileMonitor fileMonitor;
+    private final String absoluteFolderPath;
+    private final Map<String, Map<String, Long>> jarsMap;
+    private final List<JarModifiedListener> jarModifiedListeners;
 
-	public JarMonitor(String absoluteFolderPath) {
-		this.absoluteFolderPath = absoluteFolderPath;
-		this.jarsMap = new HashMap<String, Map<String, Long>>();
-		this.jarModifiedListeners = new LinkedList<JarModifiedListener>();
+    public JarMonitor(String absoluteFolderPath) {
+        this.absoluteFolderPath = absoluteFolderPath;
+        this.jarsMap = new HashMap<String, Map<String, Long>>();
+        this.jarModifiedListeners = new LinkedList<JarModifiedListener>();
 
-		fileMonitor = new FileMonitor(Arrays.asList(absoluteFolderPath), "jar");
-		fileMonitor.addModifiedListener(this);
-		fileMonitor.addAddedListener(this);
-		fileMonitor.addDeletedListener(this);
-	}
+        fileMonitor = new FileMonitor(Arrays.asList(absoluteFolderPath), "jar");
+        fileMonitor.addModifiedListener(this);
+        fileMonitor.addAddedListener(this);
+        fileMonitor.addDeletedListener(this);
+    }
 
-	public void run() {
-		fileMonitor.run();
-	}
+    public void run() {
+        fileMonitor.run();
+    }
 
-	public void fileModified(FileEvent event) {
-		JarFile file = getJarFile(event);
+    public void fileModified(FileEvent event) {
+        JarFile file = getJarFile(event);
 
-		if (file != null) {
-			Map<String, Long> jarEntries = jarsMap.get(event.getSource());
-			for (Enumeration<JarEntry> entries = file.entries(); entries
-					.hasMoreElements();) {
-				JarEntry entry = entries.nextElement();
+        if (file != null) {
+            Map<String, Long> jarEntries = jarsMap.get(event.getSource());
+            for (Enumeration<JarEntry> entries = file.entries(); entries
+                    .hasMoreElements();) {
+                JarEntry entry = entries.nextElement();
 
-				if (!jarEntries.containsKey(entry.getName())) {
-					jarEntries.put(entry.getName(), Long.valueOf(entry.getTime()));
-				}
+                if (!jarEntries.containsKey(entry.getName())) {
+                    jarEntries.put(entry.getName(), Long.valueOf(entry.getTime()));
+                }
 
-				if (entry.getTime() != jarEntries.get(entry.getName()).longValue()) {
-					jarEntries.put(entry.getName(), Long.valueOf(entry.getTime()));
-					notifyJarModifiedListeners(new JarEvent(file, entry.getName()));
-				}
+                if (entry.getTime() != jarEntries.get(entry.getName()).longValue()) {
+                    jarEntries.put(entry.getName(), Long.valueOf(entry.getTime()));
+                    notifyJarModifiedListeners(new JarEvent(file, entry.getName()));
+                }
 
-			}
+            }
 
-		}
-	}
+        }
+    }
 
-	public void fileAdded(FileEvent event) {
-		JarFile file = getJarFile(event);
+    public void fileAdded(FileEvent event) {
+        JarFile file = getJarFile(event);
 
-		if (file != null) {
-			Map<String, Long> jarEntries = new HashMap<String, Long>();
-			jarsMap.put(event.getSource().toString(), jarEntries);
+        if (file != null) {
+            Map<String, Long> jarEntries = new HashMap<String, Long>();
+            jarsMap.put(event.getSource().toString(), jarEntries);
 
-			for (Enumeration<JarEntry> entries = file.entries(); entries
-					.hasMoreElements();) {
-				JarEntry entry = entries.nextElement();
-				if (entry.getName().endsWith("jar")) {
-					jarEntries.put(entry.getName(), Long.valueOf(entry.getTime()));
-					notifyJarModifiedListeners(new JarEvent(file, entry.getName()));
-				}
-			}
-		}
-	}
+            for (Enumeration<JarEntry> entries = file.entries(); entries
+                    .hasMoreElements();) {
+                JarEntry entry = entries.nextElement();
+                if (entry.getName().endsWith("jar")) {
+                    jarEntries.put(entry.getName(), Long.valueOf(entry.getTime()));
+                    notifyJarModifiedListeners(new JarEvent(file, entry.getName()));
+                }
+            }
+        }
+    }
 
-	public void fileDeleted(FileEvent event) {
-		jarsMap.remove(event.getSource());
-	}
+    public void fileDeleted(FileEvent event) {
+        jarsMap.remove(event.getSource());
+    }
 
-	public void addJarModifiedListener(JarModifiedListener listener) {
-		jarModifiedListeners.add(listener);
-	}
+    public void addJarModifiedListener(JarModifiedListener listener) {
+        jarModifiedListeners.add(listener);
+    }
 
-	private void notifyJarModifiedListeners(JarEvent event) {
-		for (JarModifiedListener listener : jarModifiedListeners) {
-			listener.jarModified(event);
-		}
-	}
+    private void notifyJarModifiedListeners(JarEvent event) {
+        for (JarModifiedListener listener : jarModifiedListeners) {
+            listener.jarModified(event);
+        }
+    }
 
-	private JarFile getJarFile(FileEvent event) {
-		try {
-			return new JarFile(absoluteFolderPath + event.getSource());
-		} catch (IOException e) {
-			log.log(Level.SEVERE, "error", e);
-			return null;
-		}
-	}
+    private JarFile getJarFile(FileEvent event) {
+        try {
+            return new JarFile(absoluteFolderPath + event.getSource());
+        } catch (IOException e) {
+            log.log(Level.SEVERE, "error", e);
+            return null;
+        }
+    }
 
 }

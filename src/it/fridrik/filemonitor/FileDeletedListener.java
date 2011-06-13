@@ -24,6 +24,6 @@ package it.fridrik.filemonitor;
  */
 public interface FileDeletedListener {
 
-	public void fileDeleted(FileEvent event);
+    public void fileDeleted(FileEvent event);
 
 }

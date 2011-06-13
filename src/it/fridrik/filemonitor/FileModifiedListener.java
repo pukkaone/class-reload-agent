@@ -24,6 +24,6 @@ package it.fridrik.filemonitor;
  */
 public interface FileModifiedListener {
 
-	public void fileModified(FileEvent event);
+    public void fileModified(FileEvent event);
 
 }
